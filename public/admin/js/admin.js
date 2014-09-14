@@ -16,6 +16,24 @@
   			$li.addClass("active");
   		}
   	});
+  	
+  	// sort
+  	$(".th-sortable").click(function() {
+  		var up = $(this).hasClass("th-sort-up");
+  		var down = $(this).hasClass("th-sort-down");
+  		var url = $(this).data("url");
+  		var sorter = $(this).data("sorter");
+  		var t = "th-sort-up";
+  		if(up) {
+  			t = "th-sort-down";
+  			location.href = url + "?sorter=" + sorter + "-down";
+  		} else {
+  			location.href = url + "?sorter=" + sorter + "-up";
+  		}
+  		$(this).removeClass("th-sort-up th-sort-down").addClass(t);
+  		
+  		
+  	});
  	
 	// sparkline
 	var sr, sparkline = function($re){

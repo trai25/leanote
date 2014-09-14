@@ -7,12 +7,13 @@ import (
 // admin 首页
 
 type Admin struct {
-	BaseController
+	AdminBaseController
 }
 
 // admin 主页
 func (c Admin) Index() revel.Result {
 	c.SetUserInfo()
+	
 	c.RenderArgs["title"] = "leanote"
 	c.RenderArgs["openRegister"] = openRegister
 	c.SetLocale()

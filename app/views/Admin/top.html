@@ -11,12 +11,9 @@
 	<link href="/public/admin/css/bootstrap.3.2.0.min.css" rel="stylesheet">
 	<link href="/public/admin/css/admin.css" rel="stylesheet">
 	<!--[if lt IE 9]>
-		<script src="js/ie/html5shiv.js">
-		</script>
-		<script src="js/ie/respond.min.js">
-		</script>
-		<script src="js/ie/excanvas.js">
-		</script>
+		<script src="/public/admin/js/ie/html5shiv.js"></script>
+		<script src="/public/admin/js/ie/respond.min.js"></script>
+		<script src="/public/admin/js/ie/excanvas.js"></script>
 	<![endif]-->
 </head>
 <body class="">
@@ -58,7 +55,6 @@
 						<header class="header bg-primary lter text-center clearfix">
 							<div class="btn-group">
 								<div class="hidden-nav-xs">
-
 									<a class="btn btn-sm btn-primary">
 										Welcome, admin!
 									</a>
@@ -69,97 +65,7 @@
 							<div class="slim-scroll" data-height="auto" data-disable-fade-out="true"
 							data-distance="0" data-size="5px" data-color="#333333">
 								<!-- nav -->
-								<nav class="nav-primary hidden-xs">
-									<ul class="nav">
-										<li class="active">
-											<a href="index.html">
-												<i class="fa fa-users icon">
-													<b class="bg-danger">
-													</b>
-												</i>
-												<span class="pull-right">
-													<i class="fa fa-angle-down text">
-													</i>
-													<i class="fa fa-angle-up text-active">
-													</i>
-												</span>
-												<span>
-													User Admin
-												</span>
-											</a>
-											<!-- 导航列表 -->
-											<ul class="nav lt">
-												<li>
-													<a href="index.html">
-														<span>
-															List
-														</span>
-													</a>
-												</li>
-												<li>
-													<a href="dashboard.html">
-														<span>
-															Add User
-														</span>
-													</a>
-												</li>
-											</ul>
-										</li>
-										
-										<li>
-											<a href="#layout">
-												<i class="fa fa-cog icon">
-													<b class="bg-warning">
-													</b>
-												</i>
-												<span class="pull-right">
-													<i class="fa fa-angle-down text">
-													</i>
-													<i class="fa fa-angle-up text-active">
-													</i>
-												</span>
-												<span>
-													Setting
-												</span>
-											</a>
-											<ul class="nav lt">
-												<li>
-													<a href="layout-c.html">
-														<span>
-															Register
-														</span>
-													</a>
-												</li>
-												<li>
-													<a href="layout-r.html">
-														<span>
-															Email
-														</span>
-													</a>
-												</li>
-												<li>
-													<a href="layout-h.html">
-														<span>
-															Share
-														</span>
-													</a>
-												</li>
-											</ul>
-										</li>
-
-										<li>
-											<a href="#layout">
-												<i class="fa fa-columns icon">
-													<b class="bg-warning">
-													</b>
-												</i>
-												<span>
-													Others
-												</span>
-											</a>
-										</li>
-									</ul>
-								</nav>
+								{{template "admin/nav.html" .}}
 								<!-- / nav -->
 							</div>
 						</section>

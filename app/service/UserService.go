@@ -295,3 +295,21 @@ func (this *UserService)UpdateColumnWidth(userId string, notebookWidth, noteList
 func  (this *UserService)UpdateLeftIsMin(userId string, leftIsMin bool) bool {
 	return db.UpdateByQMap(db.Users, bson.M{"_id": bson.ObjectIdHex(userId)}, bson.M{"LeftIsMin": leftIsMin})
 }
+
+//-------------
+// user admin
+func (this *UserService) ListUsers(pageNumber, pageSize int, sortField string, isAsc bool) (page info.Page, users []info.User) {
+	users = []info.User{}
+	skipNum, sortFieldR := parsePageAndSort(pageNumber, pageSize, sortField, isAsc)
+	query := bson.M{}
+	q := db.Users.Find(query);
+	// 总记录数
+	count, _ := q.Count()
+	// 列表
+	q.Sort(sortFieldR).
+		Skip(skipNum).
+		Limit(pageSize).
+		All(&users)
+	page = info.NewPage(pageNumber, pageSize, count, nil)
+	return
+}
