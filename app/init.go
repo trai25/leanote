@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"html/template"
 	"math"
+	"strings"
 	"strconv"
 	"time"
 )
@@ -35,13 +36,13 @@ func init() {
 	revel.TemplateFuncs["raw"] = func(str string) template.HTML {
 		return template.HTML(str)
 	}
-	revel.TemplateFuncs["add"] = func(i int) template.HTML {
+	revel.TemplateFuncs["add"] = func(i int) string {
 		i = i + 1;
-		return template.HTML(fmt.Sprintf("%v", i))
+		return fmt.Sprintf("%v", i)
 	}
-	revel.TemplateFuncs["sub"] = func(i int) template.HTML {
+	revel.TemplateFuncs["sub"] = func(i int) int {
 		i = i - 1;
-		return template.HTML(fmt.Sprintf("%v", i))
+		return i
 	}
 	revel.TemplateFuncs["concat"] = func(s1, s2 string) template.HTML {
 		return template.HTML(s1 + s2)
@@ -77,6 +78,52 @@ func init() {
 			}
 		}
 		return template.HTML(tagStr)
+	}
+	
+	revel.TemplateFuncs["li"] = func(a string) string {
+		Log(a)
+		Log("life==")
+		return ""
+	}
+	// str连接
+	revel.TemplateFuncs["urlConcat"] = func(url string, v... interface{}) string {
+		html := ""
+		for i := 0; i < len(v); i = i + 2 {
+			item := v[i]
+			if i+1 == len(v) {
+				break;
+			}
+			value := v[i+1]
+			if item != nil && value != nil {
+			    keyStr, _ := item.(string)
+			    valueStr, err := value.(string)
+			    if !err {
+				    valueInt, _ := value.(int)
+				    valueStr = strconv.Itoa(valueInt)
+			    }
+			    if keyStr != "" && valueStr != "" {
+			    	s := keyStr + "=" + valueStr
+		    		if html != "" {
+			    		html += "&" + s
+			    	} else {
+			    		html += s
+			    	}
+			    }
+		    }
+		}
+		
+		if html != "" {
+			if strings.Index(url, "?") >= 0 {
+				return url + "&" + html
+			} else {
+				return url + "?" + html
+			}
+		}
+		return url
+	}
+	
+	revel.TemplateFuncs["urlCond"] = func(url string, sorterI, keyords interface{}) template.HTML {
+		return ""
 	}
 	
 	// 为后台管理sorter th使用

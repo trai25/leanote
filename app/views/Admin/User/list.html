@@ -159,8 +159,9 @@
 				</small>
 			</div>
 			<div class="col-sm-4 text-right text-center-xs">
-				{{$a := "life"}}
+				{{set . "url" (urlConcat "/adminUser/index" "sorter" .sorter "keywords" .keywords)}}
 				{{template "admin/user/page.html" .}}
+				
 			</div>
 		</div>
 	</footer>
