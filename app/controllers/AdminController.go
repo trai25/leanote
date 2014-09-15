@@ -20,3 +20,7 @@ func (c Admin) Index() revel.Result {
 	
 	return c.RenderTemplate("admin/index.html");
 }
+
+func (c Admin) GetView(view string) revel.Result {
+	return c.RenderTemplate("admin/" + view);
+}
