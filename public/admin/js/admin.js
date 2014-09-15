@@ -1,3 +1,263 @@
+function log(o) {
+	console.log(o);
+}
+
+var ARTDIALOG = {stack:[], id: 1};
+ARTDIALOG.defaultConfig = {title:"", draggable: false, padding: 0, fixed: false, lock: false, opacity: 0.3};
+function openDialog(config) {
+	config = config || {};
+	if(!config.id) {
+		config.id = ARTDIALOG.id++;
+	}
+	if(config.content) {
+		// $("#life")
+		if(typeof config.content == "object") {
+			try {
+				config.content = config.content.get(0);
+			} catch(e) {
+				// 不是jquery对象, 而是dom对象, document.getElementById("xx")
+				// config.content = config.content;
+			}
+		}
+	}
+	config = $.extend({}, ARTDIALOG.defaultConfig, config);
+	// var content = "<div id='sys-ibank'>" + $("#sys-ibank").html() + "</div>";
+	var d = art.dialog(config);
+	
+	if(config.url) {
+		ajaxGetHtml(config.url, {}, function(ret) {
+			d.content(ret);
+		});
+	}
+	
+	ARTDIALOG.stack.push(config.id);
+	return d;
+	// $( "#sys-ibank" ).dialog({title:"插入图片", width: 800,draggable: false});
+}
+function closeDialog(){
+	var list = art.dialog.list;
+	if(!list) {
+		return;
+	}
+	while(true) {
+		var d = ARTDIALOG.stack.pop();
+		if(d) {
+			if(list[d]) {
+				list[d].close();
+				return;
+			}
+		} else {
+			return;
+		}
+	}
+}
+// 关闭最近内容为loading的dialog
+function closeLatestLoadingDialog() {
+	var list = art.dialog.list;
+	if(!list) {
+		return;
+	}
+	while(true) {
+		var d = ARTDIALOG.stack.pop();
+		if(d) {
+			if(list[d]) {
+				var dd = list[d];
+				if($(dd.content()).text() == "loading..") {
+					dd.close();
+				}
+				return;
+			}
+		} else {
+			return;
+		}
+	}
+}
+
+if(typeof art != "undefined") {
+	/**
+	 * 警告
+	 * @param	{String}	消息内容
+	 */
+	art.alert = function (content, callback) {
+	    return artDialog({
+	        id: 'Alert',
+	        icon: 'warning',
+	        fixed: true,
+	        lock: true,
+	        content: content,
+	        ok: true,
+	        opacity: 0.3,
+	        close: callback
+	    });
+	};
+	
+	/**
+	 * 确认
+	 * @param	{String}	消息内容
+	 * @param	{Function}	确定按钮回调函数
+	 * @param	{Function}	取消按钮回调函数
+	 */
+	art.confirm = function (content, yes, no) {
+	    return artDialog({
+	        id: 'Confirm',
+	        icon: 'question',
+	        fixed: true,
+	        lock: true,
+	        opacity: .3,
+	        content: content,
+	        ok: function (here) {
+	            return yes.call(this, here);
+	        },
+	        cancel: function (here) {
+	            return no && no.call(this, here);
+	        }
+	    });
+	};
+	
+	
+	/**
+	 * 提问
+	 * @param	{String}	提问内容
+	 * @param	{Function}	回调函数. 接收参数：输入值
+	 * @param	{String}	默认值
+	 */
+	art.prompt = function (content, yes, value) {
+	    value = value || '';
+	    var input;
+	    
+	    return artDialog({
+	        id: 'Prompt',
+	        icon: 'question',
+	        fixed: true,
+	        lock: true,
+	        opacity: .3,
+	        content: [
+	            '<div style="margin-bottom:5px;font-size:12px">',
+	                content,
+	            '</div>',
+	            '<div>',
+	                '<input value="',
+	                    value,
+	                '" style="width:18em;padding:6px 4px" />',
+	            '</div>'
+	            ].join(''),
+	        init: function () {
+	            input = this.DOM.content.find('input')[0];
+	            input.select();
+	            input.focus();
+	        },
+	        ok: function (here) {
+	            return yes && yes.call(this, input.value, here);
+	        },
+	        cancel: true
+	    });
+	};
+	
+	
+	/**
+	 * 短暂提示
+	 * @param	{String}	提示内容
+	 * @param	{Number}	显示时间 (默认1.5秒)
+	 */
+	art.tips = function (content, time) {
+	    return artDialog({
+	        id: 'Tips',
+	        title: false,
+	        cancel: false,
+	        fixed: true,
+	        lock: true,
+	        opacity: 0.3
+	    })
+	    .content('<div style="padding: 0 1em;">' + content + '</div>')
+	    .time(time || 1);
+	};
+	
+	// art dialog bind 
+	// <a href="javascript:;" id="agree_btn" class="button art-dialog" data-url="index.php?app=seller_refund&amp;action=confirm_refund&amp;order_id=55" data-title="确认退款">同意退款</a>
+	$(function() {
+		$(".art-dialog").click(function(){
+			var title = $(this).data('title');
+			var url = $(this).data("url");
+			var lock = +$(this).data('lock');
+			var width = $(this).data('width');
+			var config = {url: url, title: title, lock: lock};
+			if(width) {
+				config.width = width;
+			}
+			openDialog(config);
+		});
+	});
+}
+
+// 删除确认
+function drop_confirm(msg, url) {
+	if(art) {
+		art.confirm(msg,function(){
+	        // window.location = url;
+	        var self = this;
+	        self.content("正在处理...");
+	        ajaxGet(url, {}, function(ret) {
+	        	if(ret.done) {
+	        		self.content("操作成功, 正在刷新...");
+	        		location.reload();
+	        	} else {
+	        		art.alert(ret.msg);
+	        	}
+        		self.close();
+	        });
+	        return false;
+		});
+	} else {
+	    if(confirm(msg)){
+	        window.location = url;
+	    }
+    }
+}
+function init_validator(target, rules, messages) {
+	var config = {
+	        errorElement : 'div',
+	        errorClass : 'help-block alert alert-warning',
+	        focusInvalid : false,
+	        ignore: ".ignore",
+	        highlight : function(element) {
+	        	var $p = $(element).closest('.control-group');
+	            $p.removeClass("success").addClass('error');
+	        },
+	        success : function(label) {
+	        	var $p = label.closest('.control-group');
+	            $p.removeClass('error');
+	            $p.addClass("success");
+	            
+	            $p.find(".help-block").hide();
+	            $(label).hide();
+	        },
+	        errorPlacement : function(error, element) {
+	        	var $p = element.parent('div');
+	            element.parent('div').append(error);
+	            log(element);
+	            log($p);
+	        },
+	        submitHandler : function(form) {
+	            form.submit();
+	        }
+	    };
+	if(rules) {
+		config.rules = rules;
+	}
+	if(messages) {
+		config.messages = messages;
+	}
+	return $(target).validate(config);
+}
+
+
+function enter_submit(btnId) {
+	var theEvent = window.event || arguments.callee.caller.arguments[0];
+	if(theEvent.keyCode == 13||theEvent.keyCode == 108) {
+		$(btnId).trigger('click');
+	}
+}
+
 !function ($) {
   $(function(){
   	
@@ -26,14 +286,42 @@
   		var t = "th-sort-up";
   		if(up) {
   			t = "th-sort-down";
-  			location.href = url + "?sorter=" + sorter + "-down";
+  			var sUrl = "sorter=" + sorter + "-down";
   		} else {
-  			location.href = url + "?sorter=" + sorter + "-up";
+  			var sUrl = "sorter=" + sorter + "-up";
+  		}
+  		
+  		if(url.indexOf("?") > 0) {
+  			location.href = url + "&" + sUrl;
+  		} else {
+  			location.href = url + "?" + sUrl;
   		}
   		$(this).removeClass("th-sort-up th-sort-down").addClass(t);
-  		
-  		
   	});
+  	
+  	// search 
+  	$(".search-group input").keyup(function(e){
+  		enter_submit(".search-group button");
+  	});
+  	$(".search-group button").click(function(e){
+  		var url = $(this).data("url");
+  		$input = $(this).closest(".search-group").find("input");
+  		var keywords = $input.val();
+  		/*
+  		if(!keywords) {
+  			$input.focus();
+  			return;
+  		}
+  		*/
+  		if(url.indexOf("?") > 0) {
+	  		location.href = url + "&keywords=" + keywords;
+  		} else {
+	  		location.href = url + "?keywords=" + keywords;
+  		}
+  	});
+  	
+  	
+  	//--------------------------
  	
 	// sparkline
 	var sr, sparkline = function($re){

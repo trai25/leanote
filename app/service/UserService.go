@@ -298,10 +298,13 @@ func  (this *UserService)UpdateLeftIsMin(userId string, leftIsMin bool) bool {
 
 //-------------
 // user admin
-func (this *UserService) ListUsers(pageNumber, pageSize int, sortField string, isAsc bool) (page info.Page, users []info.User) {
+func (this *UserService) ListUsers(pageNumber, pageSize int, sortField string, isAsc bool, email string) (page info.Page, users []info.User) {
 	users = []info.User{}
 	skipNum, sortFieldR := parsePageAndSort(pageNumber, pageSize, sortField, isAsc)
 	query := bson.M{}
+	if email != "" {
+		query["Email"] = bson.M{"$regex": bson.RegEx{".*?" + email + ".*", "i"}}
+	}
 	q := db.Users.Find(query);
 	// 总记录数
 	count, _ := q.Count()

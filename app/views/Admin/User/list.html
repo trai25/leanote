@@ -23,28 +23,13 @@
 			</button>
 		</div>
 		<div class="col-sm-4 m-b-xs">
-			<div class="btn-group" data-toggle="buttons">
-				<label class="btn btn-sm btn-default active">
-					<input type="radio" name="options" id="option1">
-					Day
-				</label>
-				<label class="btn btn-sm btn-default">
-					<input type="radio" name="options" id="option2">
-					Week
-				</label>
-				<label class="btn btn-sm btn-default">
-					<input type="radio" name="options" id="option2">
-					Month
-				</label>
-			</div>
+			
 		</div>
 		<div class="col-sm-3">
-			<div class="input-group">
-				<input type="text" class="input-sm form-control" placeholder="Search">
+			<div class="input-group search-group">
+				<input type="text" class="input-sm form-control" placeholder="Email" id="keywords" value="{{.keywords}}" />
 				<span class="input-group-btn">
-					<button class="btn btn-sm btn-default" type="button">
-						Go!
-					</button>
+					<button class="btn btn-sm btn-default" type="button" data-url="/adminUser/index">Search</button>
 				</span>
 			</div>
 		</div>
@@ -56,8 +41,9 @@
 					<th width="20">
 						<input type="checkbox">
 					</th>
+					{{$url := urlConcat "/adminUser/index" "keywords" .keywords}}
 					<th 
-					{{sorterTh "/adminUser/index" "email" .sorter}}
+					{{sorterTh $url "email" .sorter}}
 					>
 						Email
 						<span class="th-sort">
@@ -67,7 +53,7 @@
 						</span>
 					</th>
 					<th
-					{{sorterTh "/adminUser/index" "username" .sorter}}
+					{{sorterTh $url "username" .sorter}}
 					>
 						Username
 						<span class="th-sort">
@@ -77,7 +63,7 @@
 						</span>
 					</th>
 					<th
-					{{sorterTh "/adminUser/index" "verified" .sorter}}
+					{{sorterTh $url "verified" .sorter}}
 					>
 						Verified
 						<span class="th-sort">
@@ -87,7 +73,7 @@
 						</span>
 					</th>
 					<th
-					{{sorterTh "/adminUser/index" "createdTime" .sorter}}
+					{{sorterTh $url "createdTime" .sorter}}
 					>
 						Register Date
 						<span class="th-sort">
@@ -167,4 +153,11 @@
 	</footer>
 </section>
 	
-{{template "admin/bottom.html" .}}
+{{template "admin/footer.html" .}}
+
+<script>
+$(function() {
+});
+</script>
+
+{{template "admin/end.html" .}}
