@@ -13,5 +13,5 @@ type AdminSetting struct {
 
 // email配置
 func (c AdminSetting) Email() revel.Result {
-	
+	return nil
 }
