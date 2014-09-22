@@ -1,10 +1,11 @@
-package controllers
+package admin
 
 import (
 //	"github.com/revel/revel"
 //	"gopkg.in/mgo.v2/bson"
 //	"encoding/json"
 	. "github.com/leanote/leanote/app/lea"
+	"github.com/leanote/leanote/app/controllers"
 //	"io/ioutil"
 //	"fmt"
 //	"math"
@@ -14,7 +15,7 @@ import (
 
 // 公用Controller, 其它Controller继承它
 type AdminBaseController struct {
-	BaseController // 不能用*BaseController
+	controllers.BaseController // 不能用*BaseController
 }
 
 // 得到sorterField 和 isAsc

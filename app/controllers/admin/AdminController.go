@@ -1,4 +1,4 @@
-package controllers
+package admin
 
 import (
 	"github.com/revel/revel"
@@ -15,7 +15,6 @@ func (c Admin) Index() revel.Result {
 	c.SetUserInfo()
 	
 	c.RenderArgs["title"] = "leanote"
-	c.RenderArgs["openRegister"] = openRegister
 	c.SetLocale()
 	
 	return c.RenderTemplate("admin/index.html");
