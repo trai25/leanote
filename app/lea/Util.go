@@ -269,6 +269,9 @@ func RandomPwd(num int) string {
 }
 
 func InArray(arr []string, str string) bool {
+	if arr == nil {
+		return false
+	}
 	for _, v := range arr {
 		if v == str {
 			return true

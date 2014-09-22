@@ -3,6 +3,8 @@ package app
 import (
 	"github.com/revel/revel"
 	. "github.com/leanote/leanote/app/lea"
+	"github.com/leanote/leanote/app/service"
+	"github.com/leanote/leanote/app/controllers"
 	_ "github.com/leanote/leanote/app/lea/binder"
 	"reflect"
 	"fmt"
@@ -17,7 +19,8 @@ func init() {
 	// Filters is the default set of global filters.
 	revel.Filters = []revel.Filter{
 		revel.PanicFilter,             // Recover from panics and display an error page instead.
-		revel.RouterFilter,            // Use the routing table to select the right Action
+		RouterFilter,
+		// revel.RouterFilter,            // Use the routing table to select the right Action
 		// AuthFilter,						// Invoke the action.
 		revel.FilterConfiguringFilter, // A hook for adding or removing per-Action filters.
 		revel.ParamsFilter,            // Parse parameters into Controller.Params.
@@ -235,5 +238,8 @@ func init() {
 	// init Email
 	revel.OnAppStart(func() {
 		InitEmail()
+		
+		service.InitService()
+		controllers.InitService()
 	})
 }
