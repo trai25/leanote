@@ -40,7 +40,7 @@ func (this *BlogService) GetBlog(noteId string) (blog info.BlogItem) {
 	noteContent := noteService.GetNoteContent(note.NoteId.Hex(), note.UserId.Hex())
 	
 	// 组装成blogItem
-	blog = info.BlogItem{note, noteContent.Content, false}	
+	blog = info.BlogItem{note, noteContent.Content, false, info.User{}}	
 	
 	return
 }
@@ -84,7 +84,7 @@ func (this *BlogService) ListBlogs(userId, notebookId string, page, pageSize int
 		if noteContent, ok := noteContentsMap[note.NoteId]; ok {
 			content = noteContent.Abstract
 		}
-		blogs[i] = info.BlogItem{note, content, hasMore}
+		blogs[i] = info.BlogItem{note, content, hasMore, info.User{}}
 	}
 	return count, blogs
 }
@@ -119,11 +119,70 @@ func (this *BlogService) SearchBlog(key, userId string, page, pageSize int, sort
 		if noteContent, ok := noteContentsMap[note.NoteId]; ok {
 			content = noteContent.Abstract
 		}
-		blogs[i] = info.BlogItem{note, content, hasMore}
+		blogs[i] = info.BlogItem{note, content, hasMore, info.User{}}
 	}
 	return count, blogs
 }
 
+//-------
+// p
+// 平台 lea+
+// 博客列表
+func (this *BlogService) ListAllBlogs(tag string, isRecommend bool, page, pageSize int) (info.Page, []info.BlogItem) {
+	pageInfo := info.Page{CurPage: page}
+	notes := []info.Note{}
+	skipNum, sortFieldR := parsePageAndSort(page, pageSize, "UpdatedTime", false)
+	// 不是trash的
+	query := bson.M{"IsTrash": false, "IsBlog": true}
+	q := db.Notes.Find(query);
+	
+	// 总记录数
+	count, _ := q.Count()
+	
+	q.Sort(sortFieldR).
+		Skip(skipNum).
+		Limit(pageSize).
+		All(&notes)
+	
+	if(notes == nil || len(notes) == 0) {
+		return pageInfo, nil
+	}
+	
+	// 得到content, 并且每个都要substring
+	noteIds := make([]bson.ObjectId, len(notes))
+	userIds := make([]bson.ObjectId, len(notes))
+	for i, note := range notes {
+		noteIds[i] = note.NoteId
+		userIds[i] = note.UserId
+	}
+	
+	// 可以不要的
+	// 直接得到noteContents表的abstract
+	// 这里可能是乱序的
+	noteContents := noteService.ListNoteAbstractsByNoteIds(noteIds) // 返回[info.NoteContent]
+	noteContentsMap := make(map[bson.ObjectId]info.NoteContent, len(noteContents))
+	for _, noteContent := range noteContents {
+		noteContentsMap[noteContent.NoteId] = noteContent
+	}
+	
+	// 得到用户信息
+	userMap := userService.MapUserInfoAndBlogInfosByUserIds(userIds)
+	
+	// 组装成blogItem
+	// 按照notes的顺序
+	blogs := make([]info.BlogItem, len(noteIds))
+	for i, note := range notes {
+		hasMore := true
+		var content string
+		if noteContent, ok := noteContentsMap[note.NoteId]; ok {
+			content = noteContent.Abstract
+		}
+		blogs[i] = info.BlogItem{note, content, hasMore, userMap[note.UserId]}
+	}
+	pageInfo = info.NewPage(page, pageSize, count, nil)
+	
+	return pageInfo, blogs
+}
 
 //------------------------
 // 博客设置

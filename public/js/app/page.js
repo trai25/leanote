@@ -186,6 +186,13 @@ $(function() {
 	        	log(ed.selection.getNode())
 	        });
 		},
+		
+		// fix TinyMCE Removes site base url
+		// http://stackoverflow.com/questions/3360084/tinymce-removes-site-base-urls
+		convert_urls:true,
+		relative_urls:false,
+		remove_script_host:false,
+		
 		selector : "#editorContent",
 		// height: 100,//这个应该是文档的高度, 而其上层的高度是$("#content").height(),
 		// parentHeight: $("#content").height(),
@@ -804,6 +811,7 @@ editorMode.prototype.writtingMode = function() {
 	$("#lock").css({right:0, bottom:0});
 //	$("#lock").animate({right:0}, 0);
 	*/
+	$("#pageInner").removeClass("animated fadeInUp");
 	
 	$("#themeLink").attr("href", "/css/theme/writting-overwrite.css");
 	
@@ -824,6 +832,7 @@ editorMode.prototype.writtingMode = function() {
 	
 //	$("#lock").animate({right:w},1000);
 //	$("body").fadeIn();
+	$("#pageInner").addClass("animated fadeInUp");
 
 	this.resizeEditor();
 	
