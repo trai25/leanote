@@ -1335,20 +1335,12 @@ var Attach = {
 		self.attachListO.on("click", ".download-attach", function(e) {
 			e.stopPropagation();
 			var attachId = $(this).closest('li').data("id");
-<<<<<<< HEAD
-			window.open("/attach/download?attachId=" + attachId);
-=======
 			window.open(UrlPrefix + "/attach/download?attachId=" + attachId);
->>>>>>> develop-feature-blog
 			// location.href = "/attach/download?attachId=" + attachId;
 		});
 		// 下载全部
 		self.downloadAllBtnO.click(function() {
-<<<<<<< HEAD
-			window.open("/attach/downloadAll?noteId=" + Note.curNoteId);
-=======
 			window.open(UrlPrefix + "/attach/downloadAll?noteId=" + Note.curNoteId);
->>>>>>> develop-feature-blog
 			// location.href = "/attach/downloadAll?noteId=" + Note.curNoteId;
 		});
 		
@@ -1357,12 +1349,7 @@ var Attach = {
 			e.stopPropagation();
 			var attachId = $(this).closest('li').data("id");
 			var attach = self.attachsMap[attachId];
-<<<<<<< HEAD
-			var src = "/attach/download?attachId=" + attachId;
-			
-=======
 			var src = UrlPrefix + "/attach/download?attachId=" + attachId;
->>>>>>> develop-feature-blog
 			if(LEA.isMarkdownEditor() && MarkdownEditor) {
 				MarkdownEditor.insertLink(src, attach.Title);
 			} else {
@@ -1377,11 +1364,7 @@ var Attach = {
 			if(!note) {
 				return;
 			}
-<<<<<<< HEAD
-			var src = "/attach/downloadAll?noteId=" + Note.curNoteId
-=======
 			var src = UrlPrefix +  "/attach/downloadAll?noteId=" + Note.curNoteId
->>>>>>> develop-feature-blog
 			var title = note.Title ? note.Title + ".tar.gz" : "all.tar.gz";
 			
 			if(LEA.isMarkdownEditor() && MarkdownEditor) {
@@ -1438,11 +1421,7 @@ var Attach = {
 			html += '<li class="clearfix" data-id="' + each.AttachId + '">' +
 						'<div class="attach-title">' + each.Title + '</div>' + 
 						'<div class="attach-process"> ' +
-<<<<<<< HEAD
-						'	  <button class="btn btn-sm btn-warning delete-attach"><i class="fa fa-trash-o"></i></button> ' + 
-=======
 						'	  <button class="btn btn-sm btn-warning delete-attach" data-loading-text="..."><i class="fa fa-trash-o"></i></button> ' + 
->>>>>>> develop-feature-blog
 						'	  <button type="button" class="btn btn-sm btn-primary download-attach"><i class="fa fa-download"></i></button> ' +
 						'	  <button type="button" class="btn btn-sm btn-default link-attach" title="Insert link into content"><i class="fa fa-link"></i></button> ' +
 						'</div>' + 

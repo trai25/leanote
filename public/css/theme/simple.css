@@ -362,10 +362,6 @@
   margin: 0;
   padding: 0;
   max-height: 240px;
-<<<<<<< HEAD
-  overflow: scroll;
-=======
->>>>>>> develop-feature-blog
   z-index: 3;
 }
 #attachUploadMsg .alert {
@@ -381,11 +377,7 @@
   margin: 0;
   padding: 0;
   max-height: 450px;
-<<<<<<< HEAD
-  overflow-y: scroll;
-=======
   overflow-y: auto;
->>>>>>> develop-feature-blog
 }
 #attachList li {
   display: block;
@@ -400,11 +392,7 @@
   float: left;
 }
 #attachList li .attach-title {
-<<<<<<< HEAD
-  width: 300px;
-=======
   width: 290px;
->>>>>>> develop-feature-blog
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -412,8 +400,6 @@
 #attachList li .attach-process {
   float: right;
 }
-<<<<<<< HEAD
-=======
 .animated {
   -webkit-animation-fill-mode: both;
   -moz-animation-fill-mode: both;
@@ -510,7 +496,6 @@
   -o-animation-name: fadeInUp;
   animation-name: fadeInUp;
 }
->>>>>>> develop-feature-blog
 ::selection {
   background: #000000;
   color: #ffffff;
