@@ -47,8 +47,11 @@ func (c Blog) SetNotebook2Blog(notebookId string, isBlog bool) revel.Result {
 
 
 // 博客平台
-func (c Blog) P() revel.Result {
-	
+func (c Blog) P(tag string, recommend bool) revel.Result {
+	page := c.GetPage()
+	pageInfo, blogs := blogService.ListAllBlogs(tag, recommend, page, 10)
+	c.RenderArgs["pageInfo"] = pageInfo
+	c.RenderArgs["blogs"] = blogs
 	return c.RenderTemplate("blog/all.html");
 }
 
@@ -59,7 +62,7 @@ func (c Blog) Index(userId string, notebookId string) revel.Result {
 	// 用户id为空, 转至博客平台
 	if userId == "" {
 		userId = leanoteUserId
-		return c.P()
+		return c.P("", true)
 	}
 	
 	// userId可能是 username, email
@@ -96,7 +99,7 @@ func (c Blog) Index(userId string, notebookId string) revel.Result {
 	c.RenderArgs["page"] = page
 	c.RenderArgs["pageSize"] = blogPageSize
 	c.RenderArgs["count"] = count
-	
+
 	// 当前notebook
 	c.RenderArgs["notebookId"] = notebookId
 	c.RenderArgs["notebook"] = notebook

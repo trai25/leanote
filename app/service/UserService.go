@@ -99,6 +99,29 @@ func (this *UserService) ListUserInfosByUserIds(userIds []bson.ObjectId) []info.
 	db.ListByQ(db.Users, bson.M{"_id": bson.M{"$in": userIds}}, &users)
 	return users
 }
+// 用户信息和博客设置信息
+func (this *UserService) MapUserInfoAndBlogInfosByUserIds(userIds []bson.ObjectId) map[bson.ObjectId]info.User {
+	users := []info.User{}
+	db.ListByQ(db.Users, bson.M{"_id": bson.M{"$in": userIds}}, &users)
+	
+	userBlogs := []info.UserBlog{}
+	db.ListByQWithFields(db.UserBlogs, bson.M{"_id": bson.M{"$in": userIds}}, []string{"Logo"}, &userBlogs)
+	
+	userBlogMap := make(map[bson.ObjectId]info.UserBlog, len(userBlogs))
+	for _, user := range userBlogs {
+		userBlogMap[user.UserId] = user
+	}
+	
+	userMap := make(map[bson.ObjectId]info.User, len(users))
+	for _, user := range users {
+		if userBlog, ok := userBlogMap[user.UserId]; ok {
+			user.Logo = userBlog.Logo
+		}
+		userMap[user.UserId] = user
+	}
+	
+	return userMap
+}
 
 // 通过ids得到users, 按id的顺序组织users
 func (this *UserService) GetUserInfosOrderBySeq(userIds []bson.ObjectId) []info.User {

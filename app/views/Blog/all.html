@@ -31,7 +31,7 @@ function log(o) {
 			</button>
 			<a class="navbar-brand" href="/blog">
 				<span id="logo"></span>
-				<span id="subTitle">博客</span>
+				<span id="subTitle">lea++</span>
 			</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
@@ -40,7 +40,9 @@ function log(o) {
 			</form>
 			<ul class="nav navbar-nav navbar-left">
 				<li class="active"><a href="#">推荐</a></li>
+				<!--
 				<li><a href="#">订阅</a></li>
+				-->
 				<li><a href="#">最新</a></li>
 			</ul>
 		</div>
@@ -53,6 +55,7 @@ function log(o) {
 		<li class="active">
 		<a class="category" href="javascript:void(null);">全部</a>
 		</li>
+		<!--
 		<li>
 		<a class="category" data-category-id="24" href="javascript:void(null);">有话好好说</a>
 		</li>
@@ -71,90 +74,45 @@ function log(o) {
 		<li>
 		<a class="category" data-category-id="34" href="javascript:void(null);">冰X挑战</a>
 		</li>
+		-->
 	</ul>
 	<!-- 文章列表 -->
 	<ul class="thumbnails">
+		{{range .blogs}}
 		<li>
 			<div class="article">
-				<a class="title" href="/p/3fd7936a7081" target="_blank">手心长出纠缠的曲线</a>
-				<a class="avatar maleskine-author" data-user-slug="560c45e6e2f6" href="/users/560c45e6e2f6"><img alt="29ea71bb3c16" quality="100" src="http://upload.jianshu.io/users/upload_avatars/66255/29ea71bb3c16.jpg?imageMogr/thumbnail/90x90/quality/100" thumbnail="90x90"></a>
-				<br/>
-				<a class="content" href="/p/3fd7936a7081" target="_blank">   那线不美丽，勾勒不出方文山心里的青花瓷，而是王菲手心里长出的纠缠的曲线。     母亲打电话，问这个国庆能否去成都。  接电话时，我正拉着公主的手走在喧闹的街，为了躲避时时呼啸着按着喇叭冲过来的车子，我们不得不左右闪躲，如果以一支笔来勾画我们走过的轨迹，一定是弯弯曲曲的一条线，那线不美丽...</a>
+				<a class="title" href="/blog/view/{{.NoteId.Hex}}" title="{{.Title}} {{msg $ "fullBlog"}}" target="_blank">{{.Title}}</a>
+				<a class="avatar maleskine-author" href="/blog/{{.UserId.Hex}}" title="{{.User.Username}}">
+					{{ if .User.Logo}}
+						<img src="{{.User.Logo}}">
+					{{else}}
+						<img src="/images/blog/default_avatar.png">
+					{{end}}
+				</a>
+				<div class="content">
+					{{.Desc | raw}}
+				</div>
 				<div class="article-info">
-					<a class="author" href="/users/560c45e6e2f6">
+					<a class="author" href="/blog/{{.User.Username}}">
 					<span class="fa fa-user"></span>
-			          拉莫
+			          {{.User.Username}}
 					</a>
-					<a class="notebook" href="/notebooks/133985/latest">
-					<span class="fa fa-book"></span>
-			          我的笔记本
-					</a>
-					<a href="/p/3fd7936a7081#comments" target="_blank">
+					
+					<!--
 					<span class="fa fa-comments-o"></span>9
-					</a>
-					<a class="like-icon-button" data-mcomponent="easy-like" data-method="post" data-remote="true" data-type="json" href="/notes/250718/like" rel="nofollow">
 					<span class="fa fa-heart-o"></span>6
-					</a>
-					<a class="bookmark" data-mcomponent="easy-bookmark" data-method="post" data-remote="true" data-type="json" href="/notes/250718/bookmark" rel="nofollow">
+					-->
+
 					<span class="fa fa-bookmark-o"></span>
-					</a>
+					{{if .Tags}} 
+						{{blogTags .Tags}}
+					{{else}}
+						{{msg $ "noTag"}}
+					{{end}}
 				</div>
 			</div>
 		</li>
-		<li>
-			<div class="article">
-				<a class="title" href="/p/3fd7936a7081" target="_blank">手心长出纠缠的曲线</a>
-				<a class="avatar maleskine-author" data-user-slug="560c45e6e2f6" href="/users/560c45e6e2f6"><img alt="29ea71bb3c16" quality="100" src="http://upload.jianshu.io/users/upload_avatars/66255/29ea71bb3c16.jpg?imageMogr/thumbnail/90x90/quality/100" thumbnail="90x90"></a>
-				<br/>
-				<a class="content" href="/p/3fd7936a7081" target="_blank">   那线不美丽，勾勒不出方文山心里的青花瓷，而是王菲手心里长出的纠缠的曲线。     母亲打电话，问这个国庆能否去成都。  接电话时，我正拉着公主的手走在喧闹的街，为了躲避时时呼啸着按着喇叭冲过来的车子，我们不得不左右闪躲，如果以一支笔来勾画我们走过的轨迹，一定是弯弯曲曲的一条线，那线不美丽...</a>
-				<div class="article-info">
-					<a class="author" href="/users/560c45e6e2f6">
-					<span class="fa fa-user"></span>
-			          拉莫
-					</a>
-					<a class="notebook" href="/notebooks/133985/latest">
-					<span class="fa fa-book"></span>
-			          我的笔记本
-					</a>
-					<a href="/p/3fd7936a7081#comments" target="_blank">
-					<span class="fa fa-comments-o"></span>9
-					</a>
-					<a class="like-icon-button" data-mcomponent="easy-like" data-method="post" data-remote="true" data-type="json" href="/notes/250718/like" rel="nofollow">
-					<span class="fa fa-heart-o"></span>6
-					</a>
-					<a class="bookmark" data-mcomponent="easy-bookmark" data-method="post" data-remote="true" data-type="json" href="/notes/250718/bookmark" rel="nofollow">
-					<span class="fa fa-bookmark-o"></span>
-					</a>
-				</div>
-			</div>
-		</li>
-		<li>
-			<div class="article">
-				<a class="title" href="/p/3fd7936a7081" target="_blank">手心长出纠缠的曲线</a>
-				<a class="avatar maleskine-author" data-user-slug="560c45e6e2f6" href="/users/560c45e6e2f6"><img alt="29ea71bb3c16" quality="100" src="http://upload.jianshu.io/users/upload_avatars/66255/29ea71bb3c16.jpg?imageMogr/thumbnail/90x90/quality/100" thumbnail="90x90"></a>
-				<br/>
-				<a class="content" href="/p/3fd7936a7081" target="_blank">   那线不美丽，勾勒不出方文山心里的青花瓷，而是王菲手心里长出的纠缠的曲线。     母亲打电话，问这个国庆能否去成都。  接电话时，我正拉着公主的手走在喧闹的街，为了躲避时时呼啸着按着喇叭冲过来的车子，我们不得不左右闪躲，如果以一支笔来勾画我们走过的轨迹，一定是弯弯曲曲的一条线，那线不美丽...</a>
-				<div class="article-info">
-					<a class="author" href="/users/560c45e6e2f6">
-					<span class="fa fa-user"></span>
-			          拉莫
-					</a>
-					<a class="notebook" href="/notebooks/133985/latest">
-					<span class="fa fa-book"></span>
-			          我的笔记本
-					</a>
-					<a href="/p/3fd7936a7081#comments" target="_blank">
-					<span class="fa fa-comments-o"></span>9
-					</a>
-					<a class="like-icon-button" data-mcomponent="easy-like" data-method="post" data-remote="true" data-type="json" href="/notes/250718/like" rel="nofollow">
-					<span class="fa fa-heart-o"></span>6
-					</a>
-					<a class="bookmark" data-mcomponent="easy-bookmark" data-method="post" data-remote="true" data-type="json" href="/notes/250718/bookmark" rel="nofollow">
-					<span class="fa fa-bookmark-o"></span>
-					</a>
-				</div>
-			</div>
-		</li>
+		{{end}}
 	</ul>
 </div>
 </body>
