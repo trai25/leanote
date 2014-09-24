@@ -24,7 +24,9 @@ var albumService *service.AlbumService
 var noteImageService *service.NoteImageService 
 var fileService *service.FileService
 var attachService *service.AttachService
+var configService *service.ConfigService
 
+var adminUsername = "admin"
 // 拦截器
 // 不需要拦截的url
 // Index 除了Note之外都不需要
@@ -79,7 +81,7 @@ func AuthInterceptor(c *revel.Controller) revel.Result {
 	
 	// 验证是否已登录
 	// 必须是管理员
-	if username, ok := c.Session["Username"]; ok && username == "admin" {
+	if username, ok := c.Session["Username"]; ok && username == adminUsername {
 		return nil // 已登录
 	}
 	
@@ -112,10 +114,14 @@ func InitService() {
 	pwdService = service.PwdS
 	suggestionService = service.SuggestionS
 	authService = service.AuthS
+	configService = service.ConfigS
 }
 
 func init() {
 	revel.InterceptFunc(AuthInterceptor, revel.BEFORE, &Admin{})
 	revel.InterceptFunc(AuthInterceptor, revel.BEFORE, &AdminSetting{})
 	revel.InterceptFunc(AuthInterceptor, revel.BEFORE, &AdminUser{})
+	revel.OnAppStart(func() {
+		adminUsername, _ = revel.Config.String("adminUsername")
+	})
 }

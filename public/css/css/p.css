@@ -211,28 +211,6 @@ a:hover {
   -o-transition: border-color 0.3s !important;
   transition: border-color 0.3s !important;
 }
-#pagination {
-  text-align: center;
-}
 #pagination ul {
-  margin: 0;
-  margin-top: 10px;
-}
-.pagination > .active > a,
-.pagination > .active > span,
-.pagination > .active > a:hover,
-.pagination > .active > span:hover,
-.pagination > .active > a:focus,
-.pagination > .active > span:focus {
-  background-color: #65bd77;
-  border-color: #65bd77;
-}
-#footer {
   text-align: center;
-  margin: 20px 0;
-  margin-top: 20px;
-  color: #ccc;
-}
-#footer a {
-  color: #ccc;
 }

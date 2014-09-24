@@ -128,12 +128,23 @@ func (this *BlogService) SearchBlog(key, userId string, page, pageSize int, sort
 // p
 // 平台 lea+
 // 博客列表
-func (this *BlogService) ListAllBlogs(tag string, isRecommend bool, page, pageSize int) (info.Page, []info.BlogItem) {
+func (this *BlogService) ListAllBlogs(tag string, keywords string, isRecommend bool, page, pageSize int, sorterField string, isAsc bool) (info.Page, []info.BlogItem) {
 	pageInfo := info.Page{CurPage: page}
 	notes := []info.Note{}
-	skipNum, sortFieldR := parsePageAndSort(page, pageSize, "UpdatedTime", false)
+	
+	skipNum, sortFieldR := parsePageAndSort(page, pageSize, sorterField, isAsc)
+	
 	// 不是trash的
 	query := bson.M{"IsTrash": false, "IsBlog": true}
+	if tag != "" {
+		query["Tags"] = bson.M{"$in": []string{tag}}
+	}
+	if isRecommend {
+		query["IsRecommend"] = isRecommend
+	}
+	if keywords != "" {
+		query["Title"] = bson.M{"$regex": bson.RegEx{".*?" + keywords + ".*", "i"}}
+	}
 	q := db.Notes.Find(query);
 	
 	// 总记录数
@@ -159,11 +170,13 @@ func (this *BlogService) ListAllBlogs(tag string, isRecommend bool, page, pageSi
 	// 可以不要的
 	// 直接得到noteContents表的abstract
 	// 这里可能是乱序的
+	/*
 	noteContents := noteService.ListNoteAbstractsByNoteIds(noteIds) // 返回[info.NoteContent]
 	noteContentsMap := make(map[bson.ObjectId]info.NoteContent, len(noteContents))
 	for _, noteContent := range noteContents {
 		noteContentsMap[noteContent.NoteId] = noteContent
 	}
+	*/
 	
 	// 得到用户信息
 	userMap := userService.MapUserInfoAndBlogInfosByUserIds(userIds)
@@ -174,9 +187,11 @@ func (this *BlogService) ListAllBlogs(tag string, isRecommend bool, page, pageSi
 	for i, note := range notes {
 		hasMore := true
 		var content string
+		/*
 		if noteContent, ok := noteContentsMap[note.NoteId]; ok {
 			content = noteContent.Abstract
 		}
+		*/
 		blogs[i] = info.BlogItem{note, content, hasMore, userMap[note.UserId]}
 	}
 	pageInfo = info.NewPage(page, pageSize, count, nil)
@@ -211,4 +226,12 @@ func (this *BlogService) UpdateUserBlogComment(userId string, userBlog info.User
 }
 func (this *BlogService) UpdateUserBlogStyle(userId string, userBlog info.UserBlogStyle) bool {
 	return db.UpdateByQMap(db.UserBlogs, bson.M{"_id": bson.ObjectIdHex(userId)}, userBlog)
+}
+
+//------------
+// 后台管理
+
+// 推荐博客
+func (this *BlogService) SetRecommend(noteId string, isRecommend bool) bool {
+	return db.UpdateByQField(db.Notes, bson.M{"_id": bson.ObjectIdHex(noteId), "IsBlog": true}, "IsRecommend", isRecommend)
 }

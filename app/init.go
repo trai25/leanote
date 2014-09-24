@@ -5,6 +5,7 @@ import (
 	. "github.com/leanote/leanote/app/lea"
 	"github.com/leanote/leanote/app/service"
 	"github.com/leanote/leanote/app/controllers"
+	"github.com/leanote/leanote/app/controllers/admin"
 	_ "github.com/leanote/leanote/app/lea/binder"
 	"reflect"
 	"fmt"
@@ -241,5 +242,7 @@ func init() {
 		
 		service.InitService()
 		controllers.InitService()
+		admin.InitService()
+		service.ConfigS.InitGlobalConfigs()
 	})
 }
