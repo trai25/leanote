@@ -135,7 +135,7 @@ func (this *UserService) LoginGetUserInfo(emailOrUsername, md5Pwd string) info.U
 
 // 更新username
 func (this *UserService) UpdateUsername(userId, username string) (bool, string) {
-	if userId == "" || username == "" {
+	if userId == "" || username == "" || username == "admin" { // admin用户是内置的, 不能设置
 		return false, "用户已存在"
 	}
 	usernameRaw := username // 原先的, 可能是同一个, 但有大小写
